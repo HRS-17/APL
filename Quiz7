@@ -1,0 +1,111 @@
+A "palindrome" number is a number that reads the same backwards and forwards. 
+
+For example the following are palindromes:
+
+1, 11, 22, 252, 1246421, 9999
+
+but the following are not:
+
+10, 12, 100, 999099
+
+If you are given a number N, then palin(N) should return the next palindrome strictly greater than N. So for example, palin(1) -> 2, palin(2) -> 3, palin(10) -> 11; palin(20) -> 22, palin(11) -> 22, palin(99) -> 101 etc.
+
+The code below is supposed to compute the next palindrome, but has some bugs in it. Can you fix them to pass all the tests?
+
+Answer:(penalty regime: 0 %)
+
+def palin(n):
+    s = [int(x) for x in str(n)]
+    
+    # First check if already palindrome - then inc by 1
+    lmid = len(s) // 2 - 1 # odd= left of middle 5=1 , even=left middle number4=1
+    mid  = (len(s) + 1) // 2 - 1 # odd=middle number 5=2 , even= left middle number4=1
+    
+    p = True   # p == given number is palindrome or not
+    for i in range(lmid+1):
+        if s[i] != s[-i-1]:
+            p = False
+            break
+    if p:  # if given numb is palindrome inc number (s) by 1
+        s = [int(x) for x in str(n+1)]     
+    lmid = len(s) // 2 - 1 # odd= left of middle 5=1 , even=left middle number4=1
+    mid  = (len(s) + 1) // 2 - 1 # odd=middle number 5=2 , even= left middle number4=1
+    
+    for j in range(lmid+1):
+        if s[lmid-j] < s[-(lmid+1)+j]:
+            s[lmid] += 1
+    
+    for i in range(lmid+1):
+        s[-(i+1)] = s[i]
+    
+    return int(''.join([str(x) for x in s]))
+
+
+The aliquot sum of a number is the sum of all the proper divisors of the number, that is, all divisors including 1 but excluding itself. For the number 1, since you must exclude itself, the aliquot sum is 0.
+
+A number is said to be deficient if its aliquot sum is less than the number itself, or abundant if the sum is greater than the number. If the aliquot sum is equal to the number, then it is called a perfect number.
+
+The code here is supposed to print out one of the strings "deficient", "abundant" or "perfect" based on the aliquot sum. However, the code contains some bugs. Can you fix it?
+
+
+# EXPLAIN your corrections in the appropriate places
+def aliquot(n):
+    sum = 0 
+    if n>0:
+        if n==1:
+            return sum
+        else:
+            for i in range(1, n // 2 +1 ):
+                if n % i == 0: 
+                    sum += i
+            return sum 
+    else:
+        raise ValueError
+# made sure that a number greater than 0 is inputted , the i takes n//2 value also
+
+def checkperfect(n):
+    s = aliquot(n)
+    if s == n:
+        return "perfect"
+    elif s > n:
+        return "abundant"
+    else:
+        return "deficient"
+# sign changes on block between s and n
+
+Let dNo represent the sum of the proper divisors of n (including 1, but excluding the number itself). A number is said to be perfect if n == dNo.
+
+On the other hand, two numbers n1 and n2 are said to be amicable if n1 != n2, d(n1) == n2, and d(n2) == n1. For example, d(220) = 284, and d(284) = 220. On the other hand, d(6) = 6 (it is a perfect number) but that doesn't count as an amicable number.
+
+For this assignment you need to create 2 functions:
+
+amicable(n1, n2): This function will return True if the two numbers are amicable, or False otherwise.
+amsum(N): This function will return the sum of all amicable numbers less than or equal to N.
+Note: there is a 30 second timeout o
+
+def amicable(n1, n2):
+    return True if ( n1!=n2 and d(n1) == n2 and d(n2) == n1) else False
+
+    
+def amsum(N):
+    amsum_data={i:d(i) for i in range(2,N+1)}
+    total=0
+    for i in amsum_data:
+        dam=amsum_data[i]
+        if i!=dam and dam<=N and amsum_data.get(dam,0)==i :
+            total+=i
+    return total
+# function for sum of divisors   
+def d(n):
+    if n>0:
+        total=1
+        if n==1:
+            return total
+        for i in range(2,int(n**(0.5))+1):
+            if n%i==0 :
+                total+=i
+                if i!=n/i:
+                    total+=n/i
+        return total
+    else:
+        raise ValueError
