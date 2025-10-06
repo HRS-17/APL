@@ -1,0 +1,183 @@
+Your task is to convert a number into its corresponding raindrop sounds.
+
+If a given number:
+
+is divisible by 3, add "Pling" to the result.
+is divisible by 5, add "Plang" to the result.
+is divisible by 7, add "Plong" to the result.
+is not divisible by 3, 5, or 7, the result should be the number as a string.
+Examples
+28 is divisible by 7, but not 3 or 5, so the result would be "Plong".
+30 is divisible by 3 and 5, but not 7, so the result would be "PlingPlang".
+34 is not divisible by 3, 5, or 7, so the result would be "34".
+
+def convert_to_raindrops(number):
+    result = ""
+    if number % 3 == 0:
+        result += "Pling"
+    if number % 5 == 0:
+        result += "Plang"
+    if number % 7 == 0:
+        result += "Plong"
+    if result == "":
+        result = str(number)
+    return result
+
+
+ISBN-10 Validator and Check Digit Calculator
+
+An ISBN-10 (International Standard Book Number) is a unique identifier for books. It consists of 10 digits, where the last digit is a check digit. Write a function isbn10_validator(isbn) that processes ISBN-10 numbers according to these rules:
+
+Input Format:
+
+The input string may contain hyphens which should be ignored (e.g., "0-7475-3269-9" is processed as "0747532699")
+After removing hyphens, the string should be either 9 digits (when calculating check digit) or 10 digits (when validating)
+For 10-digit ISBNs, the last character may be 'X' (representing 10)
+The function should:
+
+For a 9-digit input: calculate and return the check digit as a string ('0' to '9' or 'X')
+For a 10-digit input: return True if it's a valid ISBN-10, False if invalid
+Return None for invalid input (wrong length after removing hyphens, invalid characters)
+ISBN-10 Rules:
+
+Multiply each digit by its position (1 to 10 from left to right)
+Sum all these products
+For a valid ISBN, this sum must be divisible by 11
+Examples:
+
+isbn10_validator("007462542") → "X" (0×1 + 0×2 + 7×3 + 4×4 + 6×5 + 2×6 + 5×7 + 4×8 + 2×9 = 164, check digit is 'X')
+isbn10_validator("0-7475-3269-9") → True
+(0×1 + 7×2 + 4×3 + 7×4 + 5×5 + 3×6 + 2×7 + 6×8 + 9×9 + 9×10 = 330, divisible by 11)
+isbn10_validator("0-7475-3269-X") → False
+isbn10_validator("abc123456") → None
+
+def isbn10_validator(isbn):
+    # Remove hyphens
+    isbn = isbn.replace("-", "").upper()
+    
+    # Case 1: 9 digits → calculate check digit
+    if len(isbn) == 9 and isbn.isdigit():
+        total = sum((i + 1) * int(digit) for i, digit in enumerate(isbn))
+        remainder = total % 11
+        check_digit = 'X' if remainder == 10 else str(remainder)
+        return check_digit
+
+    # Case 2: 10 digits → validate ISBN
+    elif len(isbn) == 10:
+        # First 9 must be digits
+        if not isbn[:9].isdigit():
+            return None
+        # Last digit can be 0–9 or 'X'
+        if not (isbn[-1].isdigit() or isbn[-1] == "X"):
+            return None
+        
+        total = 0
+        for i in range(9):
+            total += (i + 1) * int(isbn[i])
+        # Handle check digit
+        if isbn[-1] == "X":
+            total += 10 * 10
+        else:
+            total += 10 * int(isbn[-1])
+        
+        return total % 11 == 0
+
+    # Invalid input length/characters
+    else:
+        return None
+
+Write a function called rectangles_overlap that determines whether two rectangles overlap. 
+
+The function should take eight parameters representing the coordinates of two rectangles:
+
+rectangles_overlap(x1, y1, w1, h1, x2, y2, w2, h2)
+Where:
+
+(x1, y1) is the bottom-left corner of the first rectangle
+w1 is the width of the first rectangle
+h1 is the height of the first rectangle
+(x2, y2) is the bottom-left corner of the second rectangle
+w2 is the width of the second rectangle
+h2 is the height of the second rectangle
+The function should return a string:
+
+"Overlap" if the rectangles overlap
+"No overlap" if the rectangles do not overlap
+Note: 
+
+Rectangles touching at an edge or a corner are considered overlapping.
+All input values will be integers.
+Assume that the rectangles are parallel to the x and y axes.
+
+def rectangles_overlap(x1, y1, w1, h1, x2, y2, w2, h2):
+    # Edges of first rectangle
+    left1, right1 = x1, x1 + w1
+    bottom1, top1 = y1, y1 + h1
+
+    # Edges of second rectangle
+    left2, right2 = x2, x2 + w2
+    bottom2, top2 = y2, y2 + h2
+
+    # Check for no overlap: one is to the left/right or above/below the other
+    if right1 < left2 or right2 < left1 or top1 < bottom2 or top2 < bottom1:
+        return "No overlap"
+    else:
+        return "Overlap"
+Ohm's Law Calculator
+Create a Python function called ohms_law(V, I, R) that calculates the missing parameter in Ohm's Law. The function should take three parameters: voltage (V), current (I), and resistance (R) in that order. At most one of these parameters can be None, while the other two should be numeric.
+
+Requirements
+Calculate the missing parameter based on Ohm's Law (V = I * R).
+Return a string with the calculated value in the format "Parameter = value" (e.g., "Voltage = 12.0"). The calculated value should be rounded to 1 decimal place.
+Handle errors and return appropriate error messages as strings, exactly as specified below.
+Do not use any import statements in your solution.
+Error Handling
+The function should return error messages in the following cases, with exact wording:
+
+If more than one parameter is None: "Error: Two parameters cannot be None"
+If all parameters are provided (none are None): "Error: All parameters are provided"
+If any parameter that isn't None is not a number (int or float): "Error: Invalid type for [parameter_name]" where [parameter_name] is "voltage", "current", or "resistance"
+If current is zero when calculating resistance: "Error: Current cannot be zero"
+Notes
+The order of precedence for error checking should be: multiple None values, all parameters provided, type errors, zero current when calculating resistance.
+For valid inputs, the function should return the result as a string with the calculated value rounded to 1 decimal place.
+Examples
+
+ohms_law(12, 2, None)    # Should return "Resistance = 6.0"
+ohms_law(None, 3, 4)     # Should return "Voltage = 12.0"
+ohms_law(24, None, 8)    # Should return "Current = 3.0"
+ohms_law(None, None, 5)  # Should return "Error: Two parameters cannot be None"
+ohms_law(10, 2, 5)       # Should return "Error: All parameters are provided"
+ohms_law("12", 2, None)  # Should return "Error: Invalid type for voltage"
+ohms_law(12, 0, None)    # Should return "Error: Current cannot be zero"
+
+Your function will be tested against various inputs to ensure it meets all the requirements specified above.
+
+def ohms_law(V, I, R):
+    params = [V, I, R]
+    names = ["voltage", "current", "resistance"]
+    
+    # Count Nones
+    num_none = params.count(None)
+    if num_none > 1:
+        return "Error: Two parameters cannot be None"
+    if num_none == 0:
+        return "Error: All parameters are provided"
+    
+    # Type check
+    for val, name in zip(params, names):
+        if val is not None and not isinstance(val, (int, float)):
+            return f"Error: Invalid type for {name}"
+    
+    # Calculate missing parameter
+    if V is None:
+        return f"Voltage = {round(float(I * R), 1)}"
+    elif I is None:
+        if R == 0:
+            return "Error: Current cannot be zero"
+        return f"Current = {round(V / R, 1)}"
+    elif R is None:
+        if I == 0:
+            return "Error: Current cannot be zero"
+        return f"Resistance = {round(V / I, 1)}"
+
